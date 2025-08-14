@@ -73,6 +73,3 @@ The app will be available at [http://localhost:5000](http://localhost:5000).
 
 This project is licensed under the MIT License.
 
----
-
-*Replace `yourusername` in the clone URL with your actual GitHub
