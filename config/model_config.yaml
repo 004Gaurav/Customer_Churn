@@ -1,0 +1,59 @@
+model_selection:
+  model:
+    XGBoost Classifier:
+      search_space_grid:
+        max_depth:
+          - 5
+          - 7
+        n_estimators:
+          - 10
+          - 20
+
+    Gradient Boosting Classifier:
+      search_space_grid:
+        n_estimators:
+          - 100
+        criterion:
+          - friedman_mse
+
+    Random Forest Classifier:
+      search_space_grid:
+        n_estimators:
+          - 100
+          - 200
+        max_depth:
+          - 5
+          - 10
+        min_samples_split:
+          - 2
+        min_samples_leaf:
+          - 1
+
+    Logistic Regression:
+      search_space_grid:
+        penalty:
+          - l1
+          - l2
+        C:
+          - 0.1
+          - 1
+          - 10
+        solver:
+          - liblinear
+          - saga
+        max_iter:
+          - 100
+          - 200
+
+    Support Vector Machine (SVM):
+      search_space_grid:
+        C:
+          - 0.1
+          - 1
+          - 10
+        kernel:
+          - linear
+          - rbf
+        gamma:
+          - scale
+          - auto
