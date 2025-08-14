@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Batch Prediction - Home Credit Predictor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0eafc, #cfdef3 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            max-width: 480px;
+            width: 100%;
+            padding: 30px 32px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.18);
+            background: #fff;
+            text-align: center;
+        }
+        h1 {
+            color: #2d3e50;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        h2 {
+            color: #4e73df;
+            font-size: 1.2em;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+        .form-control-file {
+            margin: 18px 0;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #bfc9d9;
+            background: #f7fafd;
+        }
+        .btn-primary {
+            background: #4e73df;
+            color: #fff;
+            border-radius: 6px;
+            padding: 10px 0;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover {
+            background: #2e59d9;
+        }
+        .result {
+            margin-top: 28px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1cc88a;
+        }
+        .download-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #4e73df;
+            font-weight: 500;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Home Credit Predictor</h1>
+        <h2>Batch Prediction Upload</h2>
+        <form action="{{ url_for('batch_predict') }}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" class="form-control-file" accept=".csv" required>
+            <button type="submit" class="btn btn-primary">Predict</button>
+        </form>
+
+        {% if output_path %}
+            <div class="result">
+                Predictions saved!
+                <br>
+                <a class="download-link" href="{{ url_for('download_file', filename='prediction_file.csv') }}" download>Download Prediction File</a>
+            </div>
+        {% endif %}
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
