@@ -23,7 +23,18 @@ ENV/
 .DS_Store
 
 # Model artifacts
-artifacts/
+# Ignore large or auto-generated files
+artifacts/predictions/
+artifacts/train_processed.csv
+artifacts/test_processed.csv
+artifacts/raw_data.csv
+artifacts/train.csv
+artifacts/test.csv
+
+# Keep only essential files for deployment
+!artifacts/model.pkl
+!artifacts/preprocessor.pkl
+!artifacts/top_features.json
 
 # Logs
 *.log
