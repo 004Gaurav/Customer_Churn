@@ -6,7 +6,7 @@
     <title>Customer Churn Prediction</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1">
 </head>
 <body class="bg-light">
     <!-- Loading Spinner -->
@@ -25,6 +25,10 @@
                 <h2 class="card-title mb-0 text-center"><i class="fas fa-chart-line me-2"></i>Customer Churn Prediction</h2>
             </div>
             <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                
                 <form id="predictionForm" method="POST" action="{{ url_for('home') }}" novalidate>
                     <!-- Personal Information Section -->
                     <fieldset class="mb-4">
@@ -151,7 +155,7 @@
                 {% endif %}
             </div>
             <div class="card-footer text-muted text-center">
-                <small>Powered by Machine Learning | {% now 'utc', '%Y' %}</small>
+                <small>Powered by Machine Learning | {{ current_year }}</small>
             </div>
         </div>
     </div>
