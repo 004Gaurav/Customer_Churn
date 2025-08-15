@@ -104,7 +104,8 @@ def home():
 # 4. RUN THE APP
 # ======================
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get("PORT", 10000))  # defaults to 10000 if PORT not set
+
     
     # For Windows development:
     try:
