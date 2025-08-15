@@ -104,16 +104,7 @@ def home():
 # 4. RUN THE APP
 # ======================
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # defaults to 10000 if PORT not set
-
+    port = int(os.environ.get("PORT", 10000))  # Use PORT if set, otherwise 10000
     
-    # For Windows development:
-    try:
-        from waitress import serve
-        print(f"🚀 Server running on http://localhost:{port} (Waitress)")
-        serve(app, host="0.0.0.0", port=port)
-    
-    # For production/Linux:
-    except ImportError:
-        print(f"🚀 Server running on http://localhost:{port} (Flask development server)")
-        app.run(host="0.0.0.0", port=port)
+    # For production (works with both Waitress and Gunicorn)
+    app.run(host="0.0.0.0", port=port)
