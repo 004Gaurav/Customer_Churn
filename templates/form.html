@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1">
+    <style>
+        .error-highlight {
+            border-color: #dc3545 !important;
+            background-color: #fff3f3 !important;
+        }
+        .error-detail {
+            font-size: 0.85rem;
+            color: #dc3545;
+            margin-top: 0.25rem;
+        }
+        .error-icon {
+            color: #dc3545;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body class="bg-light">
     <!-- Loading Spinner -->
@@ -26,7 +41,25 @@
             </div>
             <div class="card-body">
                 {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <div>
+                            <strong>Error in submission:</strong> {{ error }}
+                            {% if missing_fields %}
+                            <div class="mt-2">
+                                <strong>Missing fields:</strong>
+                                <ul class="mb-0">
+                                    {% for field in missing_fields %}
+                                    <li>{{ field }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 {% endif %}
                 
                 <form id="predictionForm" method="POST" action="{{ url_for('home') }}" novalidate>
@@ -39,23 +72,40 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
-                                    <select class="form-select" id="gender" name="gender" required>
+                                    <select class="form-select {% if 'gender' in error_fields %}error-highlight{% endif %}" 
+                                            id="gender" name="gender" required>
                                         <option value="" selected disabled>Select Gender</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male" {% if form_data and form_data.gender == 'Male' %}selected{% endif %}>Male</option>
+                                        <option value="Female" {% if form_data and form_data.gender == 'Female' %}selected{% endif %}>Female</option>
                                     </select>
                                     <div class="invalid-feedback">Please select a gender.</div>
+                                    {% if 'gender' in error_fields %}
+                                    <div class="error-detail">
+                                        <i class="fas fa-info-circle error-icon"></i>
+                                        {{ error_fields.gender }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
-                                    <input type="number" class="form-control" id="age" name="age" min="18" max="100" placeholder="Age" required>
+                                    <input type="number" class="form-control {% if 'age' in error_fields %}error-highlight{% endif %}" 
+                                           id="age" name="age" min="18" max="100" 
+                                           value="{% if form_data %}{{ form_data.age }}{% endif %}" 
+                                           placeholder="Age" required>
                                     <div class="invalid-feedback">Please enter a valid age (18-100).</div>
+                                    {% if 'age' in error_fields %}
+                                    <div class="error-detail">
+                                        <i class="fas fa-info-circle error-icon"></i>
+                                        {{ error_fields.age }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </fieldset>
+                    
 
                     <!-- Account Information Section -->
                     <fieldset class="mb-4">
@@ -66,29 +116,65 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                    <input type="number" class="form-control" id="tenure" name="tenure" min="0" placeholder="Tenure (months)" required>
+                                    <input type="number" class="form-control {% if 'tenure' in error_fields %}error-highlight{% endif %}" 
+                                           id="tenure" name="tenure" min="0" 
+                                           value="{% if form_data %}{{ form_data.tenure }}{% endif %}" 
+                                           placeholder="Tenure (months)" required>
                                     <div class="invalid-feedback">Please enter valid tenure.</div>
+                                    {% if 'tenure' in error_fields %}
+                                    <div class="error-detail">
+                                        <i class="fas fa-info-circle error-icon"></i>
+                                        {{ error_fields.tenure }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-wallet"></i></span>
-                                    <input type="number" step="0.01" class="form-control" id="balance" name="balance" placeholder="Account Balance" required>
+                                    <input type="number" step="0.01" class="form-control {% if 'balance' in error_fields %}error-highlight{% endif %}" 
+                                           id="balance" name="balance" 
+                                           value="{% if form_data %}{{ form_data.balance }}{% endif %}" 
+                                           placeholder="Account Balance" required>
                                     <div class="invalid-feedback">Please enter valid balance.</div>
+                                    {% if 'balance' in error_fields %}
+                                    <div class="error-detail">
+                                        <i class="fas fa-info-circle error-icon"></i>
+                                        {{ error_fields.balance }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-boxes"></i></span>
-                                    <input type="number" class="form-control" id="products" name="products" min="1" placeholder="Number of Products" required>
+                                    <input type="number" class="form-control {% if 'products' in error_fields %}error-highlight{% endif %}" 
+                                           id="products" name="products" min="1" 
+                                           value="{% if form_data %}{{ form_data.products }}{% endif %}" 
+                                           placeholder="Number of Products" required>
                                     <div class="invalid-feedback">Minimum 1 product required.</div>
+                                    {% if 'products' in error_fields %}
+                                    <div class="error-detail">
+                                        <i class="fas fa-info-circle error-icon"></i>
+                                        {{ error_fields.products }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    <input type="number" step="0.01" class="form-control" id="estimated_salary" name="estimated_salary" placeholder="Estimated Salary" required>
+                                    <input type="number" step="0.01" class="form-control {% if 'estimated_salary' in error_fields %}error-highlight{% endif %}" 
+                                           id="estimated_salary" name="estimated_salary" 
+                                           value="{% if form_data %}{{ form_data.estimated_salary }}{% endif %}" 
+                                           placeholder="Estimated Salary" required>
                                     <div class="invalid-feedback">Please enter valid salary.</div>
+                                    {% if 'estimated_salary' in error_fields %}
+                                    <div class="error-detail">
+                                        <i class="fas fa-info-circle error-icon"></i>
+                                        {{ error_fields.estimated_salary }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -103,24 +189,40 @@
                             <div class="col-md-6">
                                 <label class="form-label">Has Credit Card</label>
                                 <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="has_cr_card" id="cr_yes" value="1" required>
+                                    <input type="radio" class="btn-check" name="has_cr_card" id="cr_yes" value="1" 
+                                           {% if form_data and form_data.has_cr_card == '1' %}checked{% endif %} required>
                                     <label class="btn btn-outline-primary" for="cr_yes"><i class="fas fa-check me-2"></i>Yes</label>
                                     
-                                    <input type="radio" class="btn-check" name="has_cr_card" id="cr_no" value="0">
+                                    <input type="radio" class="btn-check" name="has_cr_card" id="cr_no" value="0"
+                                           {% if form_data and form_data.has_cr_card == '0' %}checked{% endif %}>
                                     <label class="btn btn-outline-primary" for="cr_no"><i class="fas fa-times me-2"></i>No</label>
                                 </div>
                                 <div class="invalid-feedback d-block">Please select an option.</div>
+                                {% if 'has_cr_card' in error_fields %}
+                                <div class="error-detail">
+                                    <i class="fas fa-info-circle error-icon"></i>
+                                    {{ error_fields.has_cr_card }}
+                                </div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Is Active Member</label>
                                 <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="is_active_member" id="active_yes" value="1" required>
+                                    <input type="radio" class="btn-check" name="is_active_member" id="active_yes" value="1" 
+                                           {% if form_data and form_data.is_active_member == '1' %}checked{% endif %} required>
                                     <label class="btn btn-outline-primary" for="active_yes"><i class="fas fa-check me-2"></i>Yes</label>
                                     
-                                    <input type="radio" class="btn-check" name="is_active_member" id="active_no" value="0">
+                                    <input type="radio" class="btn-check" name="is_active_member" id="active_no" value="0"
+                                           {% if form_data and form_data.is_active_member == '0' %}checked{% endif %}>
                                     <label class="btn btn-outline-primary" for="active_no"><i class="fas fa-times me-2"></i>No</label>
                                 </div>
                                 <div class="invalid-feedback d-block">Please select an option.</div>
+                                {% if 'is_active_member' in error_fields %}
+                                <div class="error-detail">
+                                    <i class="fas fa-info-circle error-icon"></i>
+                                    {{ error_fields.is_active_member }}
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </fieldset>
@@ -180,14 +282,20 @@
                 form.classList.add('was-validated');
             }, false);
             
-            // Add input masking for better UX
-            document.getElementById('balance').addEventListener('input', function(e) {
-                this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+            // Auto-format numeric inputs
+            const formatNumericInput = (input) => {
+                input.value = input.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+            };
+            
+            // Apply to all numeric inputs
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', () => formatNumericInput(input));
             });
             
-            document.getElementById('estimated_salary').addEventListener('input', function(e) {
-                this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-            });
+            // Focus on first error field if present
+            if (document.querySelector('.error-highlight')) {
+                document.querySelector('.error-highlight').focus();
+            }
         })();
     </script>
 </body>

@@ -32,12 +32,13 @@ artifacts/train.csv
 artifacts/test.csv
 
 # Keep only essential files for deployment
+artifacts/*
 !artifacts/model.pkl
 !artifacts/preprocessor.pkl
 !artifacts/top_features.json
 
 # Logs
-*.log
+logs
 
 # Test and coverage outputs
 htmlcov/
