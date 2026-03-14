@@ -43,3 +43,5 @@ logs
 # Test and coverage outputs
 htmlcov/
 .coverage
+# Local databases
+*.db
